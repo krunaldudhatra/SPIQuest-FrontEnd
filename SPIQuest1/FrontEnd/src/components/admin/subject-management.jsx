@@ -179,196 +179,208 @@ export default function SubjectManagement() {
 
   return (
     <div className="subject-management">
-      <div className="section-header">
-        <h3>Subject Management</h3>
-        <button className="add-course-button" onClick={() => setShowForm(true)}>
-          <FaPlus /> Add Subject
-        </button>
+      <div className="page-header">
+        <h2>Subject Management</h2>
+        <p>Create, edit, and manage subjects</p>
       </div>
 
-      <div className="search-container">
-        <div className="search-box">
-          <FaSearch className="search-icon" />
-          <input
-            type="text"
-            placeholder="Search subjects..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-        </div>
-      </div>
-
-      {loading && <div className="loading-spinner">Loading...</div>}
-
-      {showForm && (
-        <div className="form-container">
-          <div className="form-header">
-            <h4>{editingSubject ? "Edit Subject" : "Add New Subject"}</h4>
-            <button className="cancel-button" onClick={resetForm}>
-              ×
-            </button>
+      <div className="content-card">
+        <div className="section-header">
+          <div className="search-container">
+            <div className="search-box">
+              <FaSearch className="search-icon" />
+              <input
+                type="text"
+                placeholder="Search subjects..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+            </div>
           </div>
-
-          <form onSubmit={handleSubmit} className="admin-form">
-            <div className="form-grid">
-              <div className="input-group">
-                <label htmlFor="subjectCode">Subject Code *:</label>
-                <input
-                  type="text"
-                  id="subjectCode"
-                  name="subjectCode"
-                  value={formData.subjectCode}
-                  onChange={handleInputChange}
-                  required
-                  disabled={loading}
-                />
-              </div>
-
-              <div className="input-group">
-                <label htmlFor="subjectName">Subject Name *:</label>
-                <input
-                  type="text"
-                  id="subjectName"
-                  name="subjectName"
-                  value={formData.subjectName}
-                  onChange={handleInputChange}
-                  required
-                  disabled={loading}
-                />
-              </div>
-
-              <div className="input-group">
-                <label htmlFor="subjectCredit">Credits *:</label>
-                <input
-                  type="number"
-                  id="subjectCredit"
-                  name="subjectCredit"
-                  value={formData.subjectCredit}
-                  onChange={handleInputChange}
-                  min="1"
-                  required
-                  disabled={loading}
-                />
-              </div>
-
-              <div className="input-group">
-                <label htmlFor="totalMarks">Total Marks *:</label>
-                <input
-                  type="number"
-                  id="totalMarks"
-                  name="totalMarks"
-                  value={formData.totalMarks}
-                  onChange={handleInputChange}
-                  min="1"
-                  required
-                  disabled={loading}
-                />
-              </div>
-
-              <div className="input-group">
-                <label htmlFor="termWorkMark">Term Work Marks:</label>
-                <input
-                  type="number"
-                  id="termWorkMark"
-                  name="termWorkMark"
-                  value={formData.termWorkMark}
-                  onChange={handleInputChange}
-                  min="0"
-                  disabled={loading}
-                />
-              </div>
-
-              <div className="input-group">
-                <label htmlFor="sessionalMark">Sessional Marks:</label>
-                <input
-                  type="number"
-                  id="sessionalMark"
-                  name="sessionalMark"
-                  value={formData.sessionalMark}
-                  onChange={handleInputChange}
-                  min="0"
-                  disabled={loading}
-                />
-              </div>
-
-              <div className="input-group">
-                <label htmlFor="externalMark">External Marks:</label>
-                <input
-                  type="number"
-                  id="externalMark"
-                  name="externalMark"
-                  value={formData.externalMark}
-                  onChange={handleInputChange}
-                  min="0"
-                  disabled={loading}
-                />
-              </div>
-
-              <div className="input-group">
-                <label htmlFor="attendance">Attendance Marks:</label>
-                <input
-                  type="number"
-                  id="attendance"
-                  name="attendance"
-                  value={formData.attendance}
-                  onChange={handleInputChange}
-                  min="0"
-                  disabled={loading}
-                />
-              </div>
-            </div>
-
-            <div className="button-group">
-              <button type="submit" className="calculate-button" disabled={loading}>
-                {loading ? "Saving..." : editingSubject ? "Update" : "Create"}
-              </button>
-              <button type="button" className="cancel-button" onClick={resetForm} disabled={loading}>
-                Cancel
-              </button>
-            </div>
-          </form>
+          <button className="add-button" onClick={() => setShowForm(true)}>
+            <FaPlus /> Add Subject
+          </button>
         </div>
-      )}
 
-      <div className="results-container">
-        <div className="semesters-container">
-          <div className="subject-header">
-            <div className="subject-name">Subject</div>
-            <div className="subject-credit">Credits</div>
-            <div className="subject-marks">Total Marks</div>
-            <div className="subject-grade">Components</div>
-            <div className="subject-actions">Actions</div>
+        {loading && <div className="loading-spinner">Loading...</div>}
+
+        {showForm && (
+          <div className="form-modal">
+            <div className="form-container">
+              <div className="form-header">
+                <h3>{editingSubject ? "Edit Subject" : "Add New Subject"}</h3>
+                <button className="close-button" onClick={resetForm}>
+                  ×
+                </button>
+              </div>
+
+              <form onSubmit={handleSubmit} className="subject-form">
+                <div className="form-grid">
+                  <div className="input-group">
+                    <label htmlFor="subjectCode">Subject Code *</label>
+                    <input
+                      type="text"
+                      id="subjectCode"
+                      name="subjectCode"
+                      value={formData.subjectCode}
+                      onChange={handleInputChange}
+                      required
+                      disabled={loading}
+                    />
+                  </div>
+
+                  <div className="input-group">
+                    <label htmlFor="subjectName">Subject Name *</label>
+                    <input
+                      type="text"
+                      id="subjectName"
+                      name="subjectName"
+                      value={formData.subjectName}
+                      onChange={handleInputChange}
+                      required
+                      disabled={loading}
+                    />
+                  </div>
+
+                  <div className="input-group">
+                    <label htmlFor="subjectCredit">Credits *</label>
+                    <input
+                      type="number"
+                      id="subjectCredit"
+                      name="subjectCredit"
+                      value={formData.subjectCredit}
+                      onChange={handleInputChange}
+                      min="1"
+                      required
+                      disabled={loading}
+                    />
+                  </div>
+
+                  <div className="input-group">
+                    <label htmlFor="totalMarks">Total Marks *</label>
+                    <input
+                      type="number"
+                      id="totalMarks"
+                      name="totalMarks"
+                      value={formData.totalMarks}
+                      onChange={handleInputChange}
+                      min="1"
+                      required
+                      disabled={loading}
+                    />
+                  </div>
+
+                  <div className="input-group">
+                    <label htmlFor="sessionalMark">Sessional Marks</label>
+                    <input
+                      type="number"
+                      id="sessionalMark"
+                      name="sessionalMark"
+                      value={formData.sessionalMark}
+                      onChange={handleInputChange}
+                      min="0"
+                      disabled={loading}
+                    />
+                  </div>
+
+                  <div className="input-group">
+                    <label htmlFor="termWorkMark">Term Work Marks</label>
+                    <input
+                      type="number"
+                      id="termWorkMark"
+                      name="termWorkMark"
+                      value={formData.termWorkMark}
+                      onChange={handleInputChange}
+                      min="0"
+                      disabled={loading}
+                    />
+                  </div>
+
+                  <div className="input-group">
+                    <label htmlFor="externalMark">External Marks</label>
+                    <input
+                      type="number"
+                      id="externalMark"
+                      name="externalMark"
+                      value={formData.externalMark}
+                      onChange={handleInputChange}
+                      min="0"
+                      disabled={loading}
+                    />
+                  </div>
+
+                  <div className="input-group">
+                    <label htmlFor="attendance">Attendance Marks</label>
+                    <input
+                      type="number"
+                      id="attendance"
+                      name="attendance"
+                      value={formData.attendance}
+                      onChange={handleInputChange}
+                      min="0"
+                      disabled={loading}
+                    />
+                  </div>
+                </div>
+
+                <div className="form-actions">
+                  <button type="submit" className="submit-button" disabled={loading}>
+                    {loading ? "Saving..." : editingSubject ? "Update Subject" : "Create Subject"}
+                  </button>
+                  <button type="button" className="cancel-button" onClick={resetForm} disabled={loading}>
+                    Cancel
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        )}
+
+        <div className="subjects-table">
+          <div className="table-header">
+            <div className="header-cell subject-info">Subject Details</div>
+            <div className="header-cell">Credits</div>
+            <div className="header-cell">Total Marks</div>
+            <div className="header-cell components-header">Components (S/T/E/A)</div>
+            <div className="header-cell">Actions</div>
           </div>
 
           {filteredSubjects.length === 0 && !loading ? (
-            <div className="no-data-message">
-              <p>
-                No subjects found. {searchTerm ? "Try adjusting your search." : "Add some subjects to get started."}
-              </p>
+            <div className="empty-state">
+              <div className="empty-icon">📚</div>
+              <h3>No Subjects Found</h3>
+              <p>{searchTerm ? "Try adjusting your search." : "Add some subjects to get started."}</p>
             </div>
           ) : (
             filteredSubjects.map((subject) => (
-              <div className="subject-row" key={subject._id}>
-                <div className="subject-name">
-                  <strong>{subject.subjectCode}</strong>
-                  <br />
-                  <small>{subject.subjectName}</small>
+              <div className="table-row" key={subject._id}>
+                <div className="table-cell subject-info">
+                  <div className="subject-code">{subject.subjectCode}</div>
+                  <div className="subject-name">{subject.subjectName}</div>
                 </div>
-                <div className="subject-credit">{subject.subjectCredit}</div>
-                <div className="subject-marks">{subject.totalMarks}</div>
-                <div className="subject-grade">
-                  <small>
-                    {subject.sessionalMark ? `S:${subject.sessionalMark} ` : ""}
-                    {subject.termWorkMark ? `T:${subject.termWorkMark} ` : ""}
-                    {subject.externalMark ? `E:${subject.externalMark} ` : ""}
-                    {subject.attendance ? `A:${subject.attendance}` : ""}
-                  </small>
+                <div className="table-cell">{subject.subjectCredit}</div>
+                <div className="table-cell">{subject.totalMarks}</div>
+                <div className="table-cell components-cell">
+                  <div className="components-row">
+                    {subject.sessionalMark > 0 && (
+                      <span className="component-tag sessional">S: {subject.sessionalMark}</span>
+                    )}
+                    {subject.termWorkMark > 0 && (
+                      <span className="component-tag termwork">T: {subject.termWorkMark}</span>
+                    )}
+                    {subject.externalMark > 0 && (
+                      <span className="component-tag external">E: {subject.externalMark}</span>
+                    )}
+                    {subject.attendance > 0 && (
+                      <span className="component-tag attendance">A: {subject.attendance}</span>
+                    )}
+                  </div>
                 </div>
-                <div className="subject-actions">
-                  <button className="edit-button" onClick={() => handleEdit(subject)} title="Edit">
+                <div className="table-cell actions-cell">
+                  <button className="action-button edit" onClick={() => handleEdit(subject)} title="Edit">
                     <FaEdit />
                   </button>
-                  <button className="delete-button" onClick={() => handleDelete(subject._id)} title="Delete">
+                  <button className="action-button delete" onClick={() => handleDelete(subject._id)} title="Delete">
                     <FaTrash />
                   </button>
                 </div>

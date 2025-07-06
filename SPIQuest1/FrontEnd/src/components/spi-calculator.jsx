@@ -686,7 +686,7 @@ export default function SpiCalculator() {
                     <div className="subjects-grid">{subjects.map((subject) => renderSubjectInputForm(subject))}</div>
 
                     <div className="button-group calculate-all-container">
-                      <button className="calculate-button" onClick={calculateAllSPI}>
+                      <button style={{textAlign:'center',display:"inline"}} className="calculate-button" onClick={calculateAllSPI}>
                         Calculate SPI
                       </button>
                     </div>

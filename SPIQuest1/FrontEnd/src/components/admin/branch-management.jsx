@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { FaEdit, FaTrash, FaPlus } from "react-icons/fa"
+import { FaEdit, FaTrash, FaPlus, FaSearch } from "react-icons/fa"
 import { showToast } from "../toast"
 
 const BASE_URL = "https://backend-spiquest-1.onrender.com"
@@ -11,10 +11,15 @@ export default function BranchManagement() {
   const [loading, setLoading] = useState(false)
   const [showForm, setShowForm] = useState(false)
   const [editingBranch, setEditingBranch] = useState(null)
+  const [searchTerm, setSearchTerm] = useState("")
   const [formData, setFormData] = useState({
     branchName: "",
     semesters: "",
   })
+
+  const filteredBranches = branches.filter((branch) =>
+    branch.branchName.toLowerCase().includes(searchTerm.toLowerCase()),
+  )
 
   useEffect(() => {
     fetchBranches()
@@ -119,89 +124,120 @@ export default function BranchManagement() {
 
   return (
     <div className="branch-management">
-      <div className="section-header">
-        <h3>Branch Management</h3>
-        <button className="add-course-button" onClick={() => setShowForm(true)}>
-          <FaPlus /> Add Branch
-        </button>
+      <div className="page-header">
+        <h2>Branch Management</h2>
+        <p>Create, edit, and manage academic branches</p>
       </div>
 
-      {loading && <div className="loading-spinner">Loading...</div>}
-
-      {showForm && (
-        <div className="form-container">
-          <div className="form-header">
-            <h4>{editingBranch ? "Edit Branch" : "Add New Branch"}</h4>
-            <button className="cancel-button" onClick={resetForm}>
-              ×
-            </button>
-          </div>
-
-          <form onSubmit={handleSubmit} className="admin-form">
-            <div className="input-group">
-              <label htmlFor="branchName">Branch Name:</label>
+      <div className="content-card">
+        <div className="section-header">
+          <div className="search-container">
+            <div className="search-box">
+              <FaSearch className="search-icon" />
               <input
                 type="text"
-                id="branchName"
-                name="branchName"
-                value={formData.branchName}
-                onChange={handleInputChange}
-                required
-                disabled={loading}
+                placeholder="Search branches..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
               />
             </div>
-
-            <div className="input-group">
-              <label htmlFor="semesters">Number of Semesters:</label>
-              <input
-                type="number"
-                id="semesters"
-                name="semesters"
-                value={formData.semesters}
-                onChange={handleInputChange}
-                min="1"
-                max="12"
-                required
-                disabled={loading}
-              />
-            </div>
-
-            <div className="button-group">
-              <button type="submit" className="calculate-button" disabled={loading}>
-                {loading ? "Saving..." : editingBranch ? "Update" : "Create"}
-              </button>
-              <button type="button" className="cancel-button" onClick={resetForm} disabled={loading}>
-                Cancel
-              </button>
-            </div>
-          </form>
-        </div>
-      )}
-
-      <div className="results-container">
-        <div className="semesters-container">
-          <div className="semester-header">
-            <div className="semester-name">Branch Name</div>
-            <div className="semester-credits">Semesters</div>
-            <div className="semester-spi">Created</div>
-            <div className="semester-actions">Actions</div>
           </div>
+          <button className="add-button" onClick={() => setShowForm(true)}>
+            <FaPlus /> Add Branch
+          </button>
+        </div>
 
-          {branches.map((branch) => (
-            <div className="semester-row" key={branch._id}>
-              <div className="semester-name">{branch.branchName}</div>
-              <div className="semester-credits">{branch.semesters.length}</div>
-              <div className="semester-spi">{new Date(branch.createdAt).toLocaleDateString()}</div>
-              <div className="semester-actions">
-                <button className="edit-button" onClick={() => handleEdit(branch)} title="Edit">
-                  <FaEdit />
-                </button>
-                <button className="delete-button" onClick={() => handleDelete(branch._id)} title="Delete">
-                  <FaTrash />
+        {loading && <div className="loading-spinner">Loading...</div>}
+
+        {showForm && (
+          <div className="form-modal">
+            <div className="form-container">
+              <div className="form-header">
+                <h3>{editingBranch ? "Edit Branch" : "Add New Branch"}</h3>
+                <button className="close-button" onClick={resetForm}>
+                  ×
                 </button>
               </div>
+
+              <form onSubmit={handleSubmit} className="branch-form">
+                <div className="form-grid">
+                  <div className="input-group">
+                    <label htmlFor="branchName">Branch Name *</label>
+                    <input
+                      type="text"
+                      id="branchName"
+                      name="branchName"
+                      value={formData.branchName}
+                      onChange={handleInputChange}
+                      required
+                      disabled={loading}
+                      placeholder="e.g., Computer Science"
+                    />
+                  </div>
+
+                  <div className="input-group">
+                    <label htmlFor="semesters">Number of Semesters *</label>
+                    <input
+                      type="number"
+                      id="semesters"
+                      name="semesters"
+                      value={formData.semesters}
+                      onChange={handleInputChange}
+                      min="1"
+                      max="12"
+                      required
+                      disabled={loading}
+                      placeholder="e.g., 8"
+                    />
+                  </div>
+                </div>
+
+                <div className="form-actions">
+                  <button type="submit" className="submit-button" disabled={loading}>
+                    {loading ? "Saving..." : editingBranch ? "Update Branch" : "Create Branch"}
+                  </button>
+                  <button type="button" className="cancel-button" onClick={resetForm} disabled={loading}>
+                    Cancel
+                  </button>
+                </div>
+              </form>
             </div>
-          ))}
+          </div>
+        )}
+
+        <div className="branches-table">
+          <div className="table-header">
+            <div className="header-cell">Branch Name</div>
+            <div className="header-cell">Semesters</div>
+            <div className="header-cell">Created Date</div>
+            <div className="header-cell">Actions</div>
+          </div>
+
+          {filteredBranches.length === 0 && !loading ? (
+            <div className="empty-state">
+              <div className="empty-icon">🏫</div>
+              <h3>No Branches Found</h3>
+              <p>{searchTerm ? "Try adjusting your search." : "Add some branches to get started."}</p>
+            </div>
+          ) : (
+            filteredBranches.map((branch) => (
+              <div className="table-row" key={branch._id}>
+                <div className="table-cell">
+                  <div className="branch-name">{branch.branchName}</div>
+                </div>
+                <div className="table-cell">{branch.semesters.length}</div>
+                <div className="table-cell">{new Date(branch.createdAt).toLocaleDateString()}</div>
+                <div className="table-cell actions-cell">
+                  <button className="action-button edit" onClick={() => handleEdit(branch)} title="Edit">
+                    <FaEdit />
+                  </button>
+                  <button className="action-button delete" onClick={() => handleDelete(branch._id)} title="Delete">
+                    <FaTrash />
+                  </button>
+                </div>
+              </div>
+            ))
+          )}
         </div>
       </div>
     </div>
